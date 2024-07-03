@@ -1,0 +1,55 @@
+html {
+  position: relative;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f6f6f6;
+}
+
+.top-header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+#header-logo {
+  background-color: white;
+  width: 160px;
+  height: 140px;
+  margin-block: 1rem;
+}
+
+#container {
+  width: 100%;
+  height: 50rem;
+  border: 2px solid #333;
+  display: flex;
+  position: relative;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.box {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  max-width: 200px;
+}
+
+.images {
+  width: 100%;
+  min-width: 100px;
+  /* height: 200px; */
+  object-fit: contain;
+  padding: 0;
+}
+
+.draggable {
+  cursor: pointer;
+}
