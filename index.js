@@ -1,6 +1,8 @@
 const dragItems = document.querySelectorAll(".box");
 const imageButtonItem = document.querySelectorAll(".img-button");
 
+const itemStateAndPosition = {};
+
 function randomizeDragItemPosition(items) {
   const container = document.getElementById("container");
   const containerBoundsRect = container.getBoundingClientRect();
@@ -13,6 +15,12 @@ function randomizeDragItemPosition(items) {
 
   items.style.left = `${randomX}px`;
   items.style.top = `${randomY}px`;
+}
+
+function handleAddMetaData(e) {
+  // e.preventDefault();
+  console.log("clicked");
+  window.open("https://www.wisdomatl.com/collections/all");
 }
 
 function populateBoxesWithDelay(items) {
@@ -30,6 +38,7 @@ function populateBoxesWithDelay(items) {
 dragItems.forEach((item, index) => {
   item.addEventListener("mousedown", (e) => {
     e.preventDefault();
+
     itemStateAndPosition[index] = {
       isDragging: true,
       offsetX: e.clientX - item.offsetLeft,
@@ -60,7 +69,7 @@ document.addEventListener("touchmove", (e) => {
   Object.keys(itemStateAndPosition).forEach((key) => {
     const state = itemStateAndPosition[key];
     if (state.isDragging) {
-      e.preventDefault(); // Prevent scrolling on touch devices
+      // e.preventDefault(); // Prevent scrolling on touch devices
       const item = dragItems[key];
       const x = e.touches[0].clientX - state.offsetX;
       const y = e.touches[0].clientY - state.offsetY;
@@ -71,6 +80,8 @@ document.addEventListener("touchmove", (e) => {
 
       item.style.left = `${Math.min(Math.max(x, 0), maxX)}px`;
       item.style.top = `${Math.min(Math.max(y, 0), maxY)}px`;
+    } else {
+      handleAddMetaData(e);
     }
   });
 });
@@ -95,6 +106,8 @@ document.addEventListener("mousemove", (e) => {
 
       item.style.left = `${Math.min(Math.max(x, 0), maxX)}px`;
       item.style.top = `${Math.min(Math.max(y, 0), maxY)}px`;
+    } else {
+      handleAddMetaData(e);
     }
   });
 });
@@ -119,6 +132,12 @@ document.addEventListener("touchend", () => {
   });
 });
 
+dragItems.forEach((item, index) => {
+  item.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    handleAddMetaData(e);
+  });
+});
 //start
 populateBoxesWithDelay(dragItems);
-const itemStateAndPosition = {};
