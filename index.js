@@ -1,6 +1,6 @@
 const dragItems = document.querySelectorAll(".box");
 const imageButtonItem = document.querySelectorAll(".img-button");
-
+const container = document.getElementById("container");
 const itemStateAndPosition = {};
 
 function randomizeDragItemPosition(items) {
@@ -20,7 +20,7 @@ function randomizeDragItemPosition(items) {
 function handleAddMetaData(e) {
   // e.preventDefault();
   console.log("clicked");
-  window.open("https://www.wisdomatl.com/collections/all");
+  //window.open("https://www.wisdomatl.com/collections/all");
 }
 
 function populateBoxesWithDelay(items) {
@@ -32,58 +32,64 @@ function populateBoxesWithDelay(items) {
     }, index * 200); //staggered load
   });
 }
+
+function startDrag(moveClientX, moveClientY, index, item) {
+ 
+    itemStateAndPosition[index] = {
+      isDragging: true,
+      offsetX: moveClientX - item?.offsetLeft,
+      offsetY: moveClientY - item?.offsetTop,
+    };
+
+}
 /**
  * Mouse Event Start
- */
+*/
 dragItems.forEach((item, index) => {
   item.addEventListener("mousedown", (e) => {
     e.preventDefault();
-
-    itemStateAndPosition[index] = {
-      isDragging: true,
-      offsetX: e.clientX - item.offsetLeft,
-      offsetY: e.clientY - item.offsetTop,
-    };
+    startDrag(e.clientX, e.clientY, index, item);
   });
 });
 
 /**
  * Touch Event Start
- */
+*/
 dragItems.forEach((item, index) => {
   item.addEventListener("touchstart", (e) => {
     e.preventDefault(); // Prevent scrolling on touch devices
-    itemStateAndPosition[index] = {
-      isDragging: true,
-      offsetX: e.touches[0].clientX - item.offsetLeft,
-      offsetY: e.touches[0].clientY - item.offsetTop,
-    };
+    startDrag(e.touches[0].clientX, e.touches[0].clientY, index, item);
   });
 });
+
+function isStateDragging( moveClientX, moveClientY) {
+
+  Object.keys(itemStateAndPosition).forEach((key) => {
+    const state = itemStateAndPosition[key];
+    // Iterate over itemStateAndPosition object and update positions if dragging
+   if (state.isDragging) {
+    
+     const item = dragItems[key];
+     const x = moveClientX - state.offsetX;
+     const y = moveClientY - state.offsetY;
+   
+
+     const maxX = this.container.offsetWidth - item.offsetWidth;
+     const maxY = this.container.offsetHeight - item.offsetHeight;
+
+     item.style.left = `${Math.min(Math.max(x, 0), maxX)}px`;
+     item.style.top = `${Math.min(Math.max(y, 0), maxY)}px`;
+    }
+    return true;
+  });
+}
 
 /**
  * Touch Move
  */
 document.addEventListener("touchmove", (e) => {
-  // Iterate over itemStateAndPosition object and update positions if dragging
-  Object.keys(itemStateAndPosition).forEach((key) => {
-    const state = itemStateAndPosition[key];
-    if (state.isDragging) {
-      // e.preventDefault(); // Prevent scrolling on touch devices
-      const item = dragItems[key];
-      const x = e.touches[0].clientX - state.offsetX;
-      const y = e.touches[0].clientY - state.offsetY;
-      const container = document.getElementById("container");
-
-      const maxX = container.offsetWidth - item.offsetWidth;
-      const maxY = container.offsetHeight - item.offsetHeight;
-
-      item.style.left = `${Math.min(Math.max(x, 0), maxX)}px`;
-      item.style.top = `${Math.min(Math.max(y, 0), maxY)}px`;
-    } else {
-      handleAddMetaData(e);
-    }
-  });
+    e.preventDefault(); // Prevent scrolling on touch devices
+    isStateDragging(e.touches[0].clientX, e.touches[0].clientY);
 });
 
 /**
@@ -91,25 +97,7 @@ document.addEventListener("touchmove", (e) => {
  */
 document.addEventListener("mousemove", (e) => {
   e.preventDefault();
-
-  // Iterate over boxState object and update positions if dragging
-  Object.keys(itemStateAndPosition).forEach((key) => {
-    const state = itemStateAndPosition[key];
-    if (state.isDragging) {
-      const item = dragItems[key];
-      const x = e.clientX - state.offsetX;
-      const y = e.clientY - state.offsetY;
-      const container = document.getElementById("container");
-
-      const maxX = container.offsetWidth - item.offsetWidth;
-      const maxY = container.offsetHeight - item.offsetHeight;
-
-      item.style.left = `${Math.min(Math.max(x, 0), maxX)}px`;
-      item.style.top = `${Math.min(Math.max(y, 0), maxY)}px`;
-    } else {
-      handleAddMetaData(e);
-    }
-  });
+  isStateDragging(e.clientX, e.clientY);
 });
 
 /**
