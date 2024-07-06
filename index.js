@@ -16,19 +16,17 @@ function randomizeDragItemPosition(items) {
   items.style.top = `${randomY}px`;
 }
 
-function handleAddMetaData(e) {
-   e.preventDefault();
-//TODO:pass is isDragging
-
-  //window.open("https://www.wisdomatl.com/collections/all");
-}
-
 function populateBoxesWithDelay(items) {
   items.forEach((item, index) => {
     setTimeout(() => {
       randomizeDragItemPosition(item);
     }, index * 100); //staggered load
   });
+}
+
+function handleAddMetaData(e) {
+   e.preventDefault();
+  window.open("https://www.wisdomatl.com/collections/all");
 }
 
 function startDrag(moveClientX, moveClientY, index, item) {
@@ -51,59 +49,67 @@ function startDrag(moveClientX, moveClientY, index, item) {
     });
 }
 
-/**
- * Mouse Event Start
-*/
-dragItems.forEach((item, index) => {
-  item.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    startDrag(e.clientX, e.clientY, index, item);
-   // handleAddMetaData(e);
-  });
-});
-
 let moved = false;
 let touchedOrClicked = false;
-const handleMouseDown = (e) => {
-    //console.log(e.currentTarget);
+const handleMouseDown = (e, index, item) => {
+    e.preventDefault();
     touchedOrClicked = true;
     moved = false;
+    startDrag(e.clientX, e.clientY, index, item);
   }
   
-  let itemWasDragged = false;
-  const handleMouseMove = (e) => {
-    //console.log('handleMouseMove');
+let itemWasDragged = false;
+const handleMouseMove = (e) => {
     e.preventDefault();
     if(touchedOrClicked){
       itemWasDragged = true;
       moved = true;
-      //console.log('handleMouseMove');
-  }
+      isStateDragging(e.clientX, e.clientY);
     
+  }
 }
 
 const handleMouseUp = (e) => {
-    //console.log('handleMouseUp');
     if(itemWasDragged ){
       console.log('moved works!');
+      Object.keys(itemStateAndPosition).forEach((key) => {
+        itemStateAndPosition[key].isDragging = false;
+      });
     }
     if( !moved){
-      console.log('handleAddMetaData');
+      handleAddMetaData(e)
     }
     touchedOrClicked = false;
 }
 
-// /**
-//  * Touch Event Start
-// */
-dragItems.forEach((item, index) => {
-  item.addEventListener("touchstart", (e) => {
-    console.log(e);
-    //e.preventDefault(); // Prevent scrolling on touch devices
-    startDrag(e.touches[0].clientX, e.touches[0].clientY, index, item);
-   // handleAddMetaData(e);
-  });
-});
+const handleTouchStart = (e, index, item) => {
+  e.preventDefault();
+  touchedOrClicked = true;
+  moved = false;
+  startDrag(e.touches[0].clientX, e.touches[0].clientY, index, item);
+}
+
+const handleTouchMove = (e) => {
+  e.preventDefault();
+  if(touchedOrClicked){
+    itemWasDragged = true;
+    moved = true;
+    isStateDragging(e.touches[0].clientX, e.touches[0].clientY);
+  }
+}
+
+const handleTouchEnd = () => {
+  if(itemWasDragged ){
+    Object.keys(itemStateAndPosition).forEach((key) => {
+      itemStateAndPosition[key].isDragging = false;
+    });
+  }
+  if(!moved){
+    console.log('handleAddMetaData');
+  }
+  touchedOrClicked = false;
+}
+
 
 function isStateDragging(moveClientX, moveClientY) {
   Object.keys(itemStateAndPosition).forEach((key) => {
@@ -124,56 +130,15 @@ function isStateDragging(moveClientX, moveClientY) {
   });
 }
 
-/**
- * Touch Move
- */
-document.addEventListener("touchmove", (e) => {
-    e.preventDefault(); // Prevent scrolling on touch devices
-    isStateDragging(e.touches[0].clientX, e.touches[0].clientY);
-});
 
-/**
- * Mouse Move
- */
-document.addEventListener("mousemove", (e) => {
-  e.preventDefault();
-  isStateDragging(e.clientX, e.clientY);
-});
 
-/**
- * Mouse Up End
- */
-document.addEventListener("mouseup", () => {
-  // Reset dragging state for all boxes
-  Object.keys(itemStateAndPosition).forEach((key) => {
-    itemStateAndPosition[key].isDragging = false;
-  });
-});
-
-/**
- * Touch End
- */
-document.addEventListener("touchend", () => {
-  // Reset dragging state for all boxes
-  Object.keys(itemStateAndPosition).forEach((key) => {
-    itemStateAndPosition[key].isDragging = false;
-  });
-});
-
-// dragItems.forEach((item, index) => {
-//   item.addEventListener("click", (e) => {
-//     e.preventDefault();
-
-//     handleAddMetaData(e);
-//   });
-// });
 dragItems.forEach((item, index) => {
-  item.addEventListener('mousedown', (e) => handleMouseDown(e));
-  item.addEventListener('touchstart', (e) => handleTouchStart(e));
+  item.addEventListener('mousedown', (e) => handleMouseDown(e, index, item));
+  item.addEventListener('touchstart', (e) => handleTouchStart(e, index, item));
   item.addEventListener('mousemove', (e) => handleMouseMove(e));
-  item.addEventListener('mouseup', (e) => handleMouseUp(e));
-  //item.addEventListener('touchmove', (e) => handleTouchMove(e));
-  //item.addEventListener('touchend', (e) => handleTouchEnd(e)
+  item.addEventListener('touchmove', (e) => handleTouchMove(e));
+  item.addEventListener('mouseup', (e) => handleMouseUp(e, index, item));
+  item.addEventListener('touchend', (e) => handleTouchEnd(e));
 })
 
 //start
