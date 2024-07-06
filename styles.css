@@ -52,3 +52,17 @@ body {
 .draggable {
   cursor: pointer;
 }
+
+.grow-on-drag:hover {
+animation: Grow 0.1s ease-in;
+
+}
+
+@keyframes Grow {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.2);
+  }
+}

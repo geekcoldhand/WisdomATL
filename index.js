@@ -1,5 +1,4 @@
 const dragItems = document.querySelectorAll(".box");
-const imageButtonItem = document.querySelectorAll(".img-button");
 const container = document.getElementById("container");
 const itemStateAndPosition = {};
 
@@ -18,30 +17,40 @@ function randomizeDragItemPosition(items) {
 }
 
 function handleAddMetaData(e) {
-  // e.preventDefault();
-  console.log("clicked");
+   e.preventDefault();
+//TODO:pass is isDragging
+
   //window.open("https://www.wisdomatl.com/collections/all");
 }
 
 function populateBoxesWithDelay(items) {
-  //multiple items add to list
-
   items.forEach((item, index) => {
     setTimeout(() => {
       randomizeDragItemPosition(item);
-    }, index * 200); //staggered load
+    }, index * 100); //staggered load
   });
 }
 
 function startDrag(moveClientX, moveClientY, index, item) {
- 
     itemStateAndPosition[index] = {
       isDragging: true,
       offsetX: moveClientX - item?.offsetLeft,
       offsetY: moveClientY - item?.offsetTop,
     };
-
+    Object.keys(itemStateAndPosition).forEach((key) => {
+    const state = itemStateAndPosition[key];
+    const x = moveClientX - state.offsetX;
+    const y = moveClientY - state.offsetY;
+    console.log("state", item?.movementX);
+    if (item?.movementX && x <= 0 && y <= 0) {
+      console.log("state is clicked");
+    }
+     if (state?.movementX > 0&& x > 0 && y > 0) {
+       console.log("state is dragging");
+     }
+    });
 }
+
 /**
  * Mouse Event Start
 */
@@ -49,31 +58,62 @@ dragItems.forEach((item, index) => {
   item.addEventListener("mousedown", (e) => {
     e.preventDefault();
     startDrag(e.clientX, e.clientY, index, item);
+   // handleAddMetaData(e);
   });
 });
 
-/**
- * Touch Event Start
-*/
+let moved = false;
+let touchedOrClicked = false;
+const handleMouseDown = (e) => {
+    //console.log(e.currentTarget);
+    touchedOrClicked = true;
+    moved = false;
+  }
+  
+  let itemWasDragged = false;
+  const handleMouseMove = (e) => {
+    //console.log('handleMouseMove');
+    e.preventDefault();
+    if(touchedOrClicked){
+      itemWasDragged = true;
+      moved = true;
+      //console.log('handleMouseMove');
+  }
+    
+}
+
+const handleMouseUp = (e) => {
+    //console.log('handleMouseUp');
+    if(itemWasDragged ){
+      console.log('moved works!');
+    }
+    if( !moved){
+      console.log('handleAddMetaData');
+    }
+    touchedOrClicked = false;
+}
+
+// /**
+//  * Touch Event Start
+// */
 dragItems.forEach((item, index) => {
   item.addEventListener("touchstart", (e) => {
-    e.preventDefault(); // Prevent scrolling on touch devices
+    console.log(e);
+    //e.preventDefault(); // Prevent scrolling on touch devices
     startDrag(e.touches[0].clientX, e.touches[0].clientY, index, item);
+   // handleAddMetaData(e);
   });
 });
 
-function isStateDragging( moveClientX, moveClientY) {
-
+function isStateDragging(moveClientX, moveClientY) {
   Object.keys(itemStateAndPosition).forEach((key) => {
     const state = itemStateAndPosition[key];
-    // Iterate over itemStateAndPosition object and update positions if dragging
+  // console.log("state is dragging");
    if (state.isDragging) {
-    
-     const item = dragItems[key];
+     const item = dragItems[key]; //get the single draggable box
      const x = moveClientX - state.offsetX;
      const y = moveClientY - state.offsetY;
-   
-
+  
      const maxX = this.container.offsetWidth - item.offsetWidth;
      const maxY = this.container.offsetHeight - item.offsetHeight;
 
@@ -120,12 +160,21 @@ document.addEventListener("touchend", () => {
   });
 });
 
-dragItems.forEach((item, index) => {
-  item.addEventListener("click", (e) => {
-    e.preventDefault();
+// dragItems.forEach((item, index) => {
+//   item.addEventListener("click", (e) => {
+//     e.preventDefault();
 
-    handleAddMetaData(e);
-  });
-});
+//     handleAddMetaData(e);
+//   });
+// });
+dragItems.forEach((item, index) => {
+  item.addEventListener('mousedown', (e) => handleMouseDown(e));
+  item.addEventListener('touchstart', (e) => handleTouchStart(e));
+  item.addEventListener('mousemove', (e) => handleMouseMove(e));
+  item.addEventListener('mouseup', (e) => handleMouseUp(e));
+  //item.addEventListener('touchmove', (e) => handleTouchMove(e));
+  //item.addEventListener('touchend', (e) => handleTouchEnd(e)
+})
+
 //start
 populateBoxesWithDelay(dragItems);
