@@ -1,5 +1,7 @@
 const dragItems = document.querySelectorAll(".box");
 const container = document.getElementById("container");
+const mainContent = document.getElementById("main-content");
+const splash = document.getElementById("splash-screen");
 const itemStateAndPosition = {};
 
 function randomizeDragItemPosition(items) {
@@ -154,5 +156,18 @@ container.removeEventListener('touchmove', (e) => handleTouchMove(e));
 container.removeEventListener('mouseup', (e) => handleMouseUp(e));
 container.removeEventListener('touchend', (e) => handleTouchEnd(e));
 
+
+//splash screen
+function startSplashScreen() {
+  mainContent.style.display = "none";
+  splash.style.display = "flex";
+  setTimeout(() => {
+    splash.style.display = "none";
+    mainContent.style.display = "block";
+    populateBoxesWithDelay(dragItems);
+
+  }, 3000);
+}
+startSplashScreen();
+//document.addEventListener("DOMContentLoaded", startSplashScreen());
 //start
-populateBoxesWithDelay(dragItems);
