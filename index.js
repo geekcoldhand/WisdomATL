@@ -72,7 +72,8 @@ let touchedOrClicked = false;
 const handleMouseDown = (e, index, item) => {
     e.preventDefault();
     touchedOrClicked = true;
-    moved = false;
+  moved = false;
+  item.classList.remove("shrink-on-drop");
   item.classList.add("grow-on-drag");
     startDrag(e.clientX, e.clientY, index, item);
   }
@@ -88,14 +89,16 @@ const handleMouseMove = (e) => {
   }
 }
 
-const handleMouseUp = (e, item) => {
+const handleMouseUp = (e) => {
   e.preventDefault();
   console.log('mouse up item: ', e?.target?.classList);
   e?.target?.classList.add("shrink-on-drop");
+  e?.target?.classList.remove("grow-on-drag");
     if(itemWasDragged ){
       
       Object.keys(itemStateAndPosition).forEach((key) => {
         itemStateAndPosition[key].isDragging = false;
+        //key.classList.add("")
       });
     }
     if(!moved){

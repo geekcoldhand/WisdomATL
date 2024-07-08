@@ -1,6 +1,10 @@
 html {
   position: relative;
 }
+a{
+  color: black;
+  text-decoration: none;
+}
 
 body {
   margin: 0;
@@ -12,23 +16,50 @@ body {
   align-items: center;
   background-color: #f6f6f6;
 }
+#header-links {
 
+  display: flex;
+  gap: 1rem;
+}
 .top-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
   width: 100%;
 }
-#header-logo {
-  background-color: white;
+#gwach-logo {
   width: 160px;
   height: 140px;
-  margin-block: 1rem;
+  animation: Grow 50ms infinite; 
 }
 
+#gif-logo {
+  width: 130px;
+  /* height: 140px; */
+ 
+}
+#header-logo {
+  width: 130px;
+  /* height: 140px; */
+  animation: Grow 6s infinite;
+}
+
+#footer-logo {
+  width: 20px;
+  animation: Spin 5s infinite; 
+}
+
+footer{
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+}
 #container {
   width: 100%;
   height: 50rem;
-  border: 2px solid #333;
+  border: 2px solid #a9a7a7;
   display: flex;
   position: relative;
   height: 100%;
@@ -58,15 +89,44 @@ body {
 transform: scale(1.3);
 }
 .shrink-on-drop {
-/* animation: Grow 50ms linear; */
+/* animation: Grow 50ms infinite; */
 transform: scale(1);
 }
 
+@media screen and (max-width: 500px) {
+  .top-header {
+    justify-content: center;
+  }
+  #header-links {
+    display: none;
+  }
+  #gif-logo {
+    display: none;
+  }
+}
+
 @keyframes Grow {
-  from {
+  0% {
     transform: scale(1);
   }
-  to {
-    transform: scale(1.3);
+  25% {
+    transform: scale(1.2);
   }
+ 
+  100% {
+    transform: scale(1);
+  }
+}
+  @keyframes Spin {
+    0% {
+      transform: scale(1);
+    }
+    25% {
+      transform: rotate(180deg);
+    }
+   
+    100% {
+      transform: rotate(180deg);
+    }
+  
 }
