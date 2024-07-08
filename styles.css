@@ -16,6 +16,10 @@ body {
   align-items: center;
   background-color: #f6f6f6;
 }
+#header-hamburger {
+  display: none;
+  color: #f03f35;
+}
 #header-links {
 
   display: flex;
@@ -42,6 +46,10 @@ body {
   width: 130px;
   /* height: 140px; */
   animation: Grow 6s infinite;
+}
+
+#home-link{
+  display: flex;
 }
 
 #footer-logo {
@@ -95,14 +103,28 @@ transform: scale(1);
 
 @media screen and (max-width: 500px) {
   .top-header {
-    justify-content: center;
+    
+    justify-content: space-around;
+    align-items: center;
   }
-  #header-links {
-    display: none;
+  .header-link {
+    display: none; 
+  }
+  #header-logo {
+    margin-top: 1vh;
+    width: 100px;
   }
   #gif-logo {
     display: none;
   }
+  #header-hamburger {
+    display: block;
+  }
+  #home-link{
+    display: none;
+    font-size: 3rem;
+  }
+
 }
 
 @keyframes Grow {
