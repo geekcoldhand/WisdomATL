@@ -124,6 +124,9 @@ transform: scale(1);
     display: none;
     font-size: 3rem;
   }
+  .images{
+    width: 80px
+  }
 
 }
 
