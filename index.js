@@ -48,73 +48,10 @@ function startDrag(moveClientX, moveClientY, index, item) {
      }
     });
 }
+function isStateDragging( moveClientX, moveClientY) {
 
-let moved = false;
-let touchedOrClicked = false;
-const handleMouseDown = (e, index, item) => {
-    e.preventDefault();
-    touchedOrClicked = true;
-    moved = false;
-    startDrag(e.clientX, e.clientY, index, item);
-  }
-  
-let itemWasDragged = false;
-const handleMouseMove = (e) => {
-    e.preventDefault();
-    if(touchedOrClicked){
-      itemWasDragged = true;
-      moved = true;
-      isStateDragging(e.clientX, e.clientY);
-    
-  }
-}
-
-const handleMouseUp = (e) => {
-    if(itemWasDragged ){
-      console.log('moved works!');
-      Object.keys(itemStateAndPosition).forEach((key) => {
-        itemStateAndPosition[key].isDragging = false;
-      });
-    }
-    if( !moved){
-      handleAddMetaData(e)
-    }
-    touchedOrClicked = false;
-}
-
-const handleTouchStart = (e, index, item) => {
-  e.preventDefault();
-  touchedOrClicked = true;
-  moved = false;
-  startDrag(e.touches[0].clientX, e.touches[0].clientY, index, item);
-}
-
-const handleTouchMove = (e) => {
-  e.preventDefault();
-  if(touchedOrClicked){
-    itemWasDragged = true;
-    moved = true;
-    isStateDragging(e.touches[0].clientX, e.touches[0].clientY);
-  }
-}
-
-const handleTouchEnd = () => {
-  if(itemWasDragged ){
-    Object.keys(itemStateAndPosition).forEach((key) => {
-      itemStateAndPosition[key].isDragging = false;
-    });
-  }
-  if(!moved){
-    console.log('handleAddMetaData');
-  }
-  touchedOrClicked = false;
-}
-
-
-function isStateDragging(moveClientX, moveClientY) {
   Object.keys(itemStateAndPosition).forEach((key) => {
     const state = itemStateAndPosition[key];
-  // console.log("state is dragging");
    if (state.isDragging) {
      const item = dragItems[key]; //get the single draggable box
      const x = moveClientX - state.offsetX;
@@ -130,16 +67,89 @@ function isStateDragging(moveClientX, moveClientY) {
   });
 }
 
+let moved = false;
+let touchedOrClicked = false;
+const handleMouseDown = (e, index, item) => {
+    e.preventDefault();
+    touchedOrClicked = true;
+    moved = false;
+  item.classList.add("grow-on-drag");
+    startDrag(e.clientX, e.clientY, index, item);
+  }
+  
+let itemWasDragged = false;
+const handleMouseMove = (e) => {
+    e.preventDefault();
+    if(touchedOrClicked){
+      itemWasDragged = true;
+      moved = true;
+      isStateDragging(e.clientX, e.clientY);
+    
+  }
+}
 
+const handleMouseUp = (e, item) => {
+  e.preventDefault();
+  console.log('mouse up item: ', e?.target?.classList);
+  e?.target?.classList.add("shrink-on-drop");
+    if(itemWasDragged ){
+      
+      Object.keys(itemStateAndPosition).forEach((key) => {
+        itemStateAndPosition[key].isDragging = false;
+      });
+    }
+    if(!moved){
+      handleAddMetaData(e)
+    }
+    touchedOrClicked = false;
+}
+
+const handleTouchStart = (e, index, item) => {
+  e.preventDefault();
+  touchedOrClicked = true;
+  moved = false;
+  item.classList.add("grow-on-drag");
+  startDrag(e.touches[0].clientX, e.touches[0].clientY, index, item);
+}
+
+const handleTouchMove = (e) => {
+  e.preventDefault();
+  if(touchedOrClicked){
+    itemWasDragged = true;
+    moved = true;
+    isStateDragging( e.touches[0].clientX, e.touches[0].clientY);
+  }
+}
+
+const handleTouchEnd = (e) => {
+  e?.target?.classList.add("shrink-on-drop");
+  if(itemWasDragged ){
+    Object.keys(itemStateAndPosition).forEach((key) => {
+      itemStateAndPosition[key].isDragging = false;
+    });
+  }
+  if(!moved){
+    handleAddMetaData(e)
+  }
+  touchedOrClicked = false;
+}
 
 dragItems.forEach((item, index) => {
   item.addEventListener('mousedown', (e) => handleMouseDown(e, index, item));
   item.addEventListener('touchstart', (e) => handleTouchStart(e, index, item));
-  item.addEventListener('mousemove', (e) => handleMouseMove(e));
-  item.addEventListener('touchmove', (e) => handleTouchMove(e));
-  item.addEventListener('mouseup', (e) => handleMouseUp(e, index, item));
-  item.addEventListener('touchend', (e) => handleTouchEnd(e));
+  //release memory
+  item.removeEventListener('mousedown', (e) => handleMouseDown(e, index, item));
+  item.removeEventListener('touchstart', (e) => handleTouchStart(e, index, item));
 })
+container.addEventListener('mousemove', (e) => handleMouseMove(e));
+container.addEventListener('touchmove', (e) => handleTouchMove(e));
+container.addEventListener('mouseup', (e) => handleMouseUp(e));
+container.addEventListener('touchend', (e) => handleTouchEnd(e));
+//release memory
+container.removeEventListener('mousemove', (e) => handleMouseMove(e));
+container.removeEventListener('touchmove', (e) => handleTouchMove(e));
+container.removeEventListener('mouseup', (e) => handleMouseUp(e));
+container.removeEventListener('touchend', (e) => handleTouchEnd(e));
 
 //start
 populateBoxesWithDelay(dragItems);
