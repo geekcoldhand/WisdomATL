@@ -51,13 +51,16 @@ body {
   /* height: 140px; */
  
 }
-#header-logo {
+.header-logo {
   width: 130px;
   /* height: 140px; */
   animation: Grow 6s infinite;
   z-index: 20;
 }
-
+.collab{
+  display: flex;
+  align-items: center;
+}
 #home-link{
   display: flex;
 }
@@ -178,7 +181,7 @@ transform: scale(1);
     transform: scale(1);
   }
   25% {
-    transform: scale(1.3);
+    transform: scale(1.1);
   }
  
   100% {
