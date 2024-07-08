@@ -2,7 +2,8 @@
 
 ## Deployment https://geekcoldhand.github.io/WisdomATL/
 
--Fashion Sandbox for Made to Err
+-Fashion Sandbox for  Wisdom Fashion House
+
 
 ## Technologies Used
 
@@ -13,6 +14,9 @@
 ## Author
 
 Geek With a Cold Hand
+
+## Demo
+![demo](./img/demo.gif)
 
 ## License
 
