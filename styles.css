@@ -153,7 +153,7 @@ transform: scale(1);
   .header-link {
     display: none; 
   }
-  #header-logo {
+  .header-logo {
     margin-top: 1vh;
     width: 100px;
   }
