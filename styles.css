@@ -94,7 +94,7 @@ footer{
   z-index: -2;
 }
 .glasses{
-  width: 8rem;
+  width: 9rem;
 }
 .box {
   position: absolute;
@@ -104,8 +104,7 @@ footer{
 }
 
 .images {
-
-  min-width: 100px;
+  min-width: 70px;
   /* height: 200px; */
   object-fit: contain;
   padding: 0;
@@ -178,10 +177,11 @@ transform: scale(1);
     font-size: 3rem;
   }
   .images{
-    width: 80px
+    width: 70px
   }
   .banner-message{
     font-size: 10px;
+    white-space: nowrap;
   }
 
 }
